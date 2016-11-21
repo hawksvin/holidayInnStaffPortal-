@@ -63,7 +63,7 @@ echo "
 				<div class="span12">
 					<div class="span2" style="width: 15%;">
 						<ul class="unstyled">
-						<li><a href="#"><img src="img/logo.jpeg" alt="Logo" ></a><li>
+						<li><a href="https://www.holidayinn.com"><img src="img/logo.jpeg" alt="Logo" ></a><li>
 							
 						</ul>
 					</div>

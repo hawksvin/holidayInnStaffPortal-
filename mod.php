@@ -1,9 +1,6 @@
 <?php
 /**
- * MASTER LOGIN SYSTEM
- * @author Mihai Ionut Vilcu (ionutvmi@gmail.com)
- * June 2013
- *
+
  */
 
 
@@ -129,11 +126,122 @@ if(($act == 'ban') && $user->group->canban && ($user->data->userid != $u->userid
 
 	header("Location: ". $set->url."/profile.php?u=$u->userid");
 	exit;
-} else if(($act == 'del') && $user->isAdmin() && ($user->data->userid != $u->userid)) {
+} 
+
+
+else if(($act == 'aprv')){
+	
+	
+	$leaveID = $_GET['lid'];
+	$userID = $u->userid;
+	$leaveType = $_GET['lType'];
+	$leaveDays = $_GET['lDys'];
+	
+	$leaveBal = 0;
+	
+	//echo "Approve works".$leaveID;
+	
+	
+	//get Leave Balances from Database
+	
+	$bL = $db->getRow("SELECT * FROM `".MLS_PREFIX."balances` WHERE `userid` = ?i", $userID);
+	
+	
+	
+	
+	
+	
+	//calculating Leave balances Based on Leave Type
+	
+	if($leaveType == 'CL'){
+		
+		$leaveBal = $bL->BalCL;
+		$leaveBal = $leaveBal - $leaveDays;
+		
+		$db->query("UPDATE `hi_staffportal`.`hi_balances` SET `BalCL` = $leaveBal WHERE `hi_balances`.`userid` = $userID ");	
+		
+	}else if($leaveType == 'EL'){
+		
+		$leaveBal = $bL->BalEL;
+		$leaveBal = $leaveBal - $leaveDays;
+		
+		$db->query("UPDATE `hi_staffportal`.`hi_balances` SET `BalEL` = $leaveBal WHERE `hi_balances`.`userid` = $userID ");
+		
+	}else if($leaveType == 'RH'){
+		
+		$leaveBal = $bL->BalRH;
+		$leaveBal = $leaveBal - $leaveDays;
+		
+		$db->query("UPDATE `hi_staffportal`.`hi_balances` SET `BalRH` = $leaveBal WHERE `hi_balances`.`userid` = $userID ");	
+		
+	}else if($leaveType == 'ML'){
+		
+		$leaveBal = $bL->BalML;
+		$leaveBal = $leaveBal - $leaveDays;
+		
+		$db->query("UPDATE `hi_staffportal`.`hi_balances` SET `BalML` = $leaveBal WHERE `hi_balances`.`userid` = $userID ");	
+	}
+	
+	
+	
+		if($db->query("UPDATE `hi_staffportal`.`hi_leaves` SET `IsApproved` = '1' WHERE `hi_leaves`.`LeaveID` = $leaveID ")){
+			
+		$page->success = "Success! Leave request appproved !";
+
+		header("Location: ". $set->url."/leaveAdmin.php");
+		exit;
+			
+		}else{
+			
+			$page->error = "OOps! Sorry An Error Occured :( ";
+			
+		}	
+	
+	
+}
+
+else if(($act == 'deny')){
+	
+	$LvID = $_GET['lid'];
+	
+	//echo "Deny Works";
+	
+	
+	if($db->query("UPDATE `hi_staffportal`.`hi_leaves` SET `IsApproved` = '0' WHERE `hi_leaves`.`LeaveID` = $LvID ")){
+			
+		$page->success = "Success! Leave request Denied !";	
+		
+		header("Location: ". $set->url."/leaveAdmin.php");
+		exit;
+			
+		}else{
+			
+			$page->error = "OOps! Sorry An Error Occured :( ";
+			
+		}
+	
+	
+	
+}
+
+
+
+else if(($act == 'del') && $user->isAdmin() && ($user->data->userid != $u->userid)) {
 
 	if($_POST) { // we make sure that the users is deleted from all tables
 		$db->query("DELETE FROM `".MLS_PREFIX."users` WHERE `userid` = ?i", $u->userid);
 		$db->query("DELETE FROM `".MLS_PREFIX."privacy` WHERE `userid` = ?i", $u->userid);
+		
+		
+		
+		$db->query("DELETE FROM `".MLS_PREFIX."banned` WHERE `userid` = ?i", $u->userid);
+		$user_id =  $u->userid;
+		
+		$db->query("DELETE FROM `hi_balances` WHERE `hi_balances`.`userid` = $user_id");
+		
+		$db->query("DELETE FROM `hi_leaves` WHERE `hi_leaves`.`userid` = $user_id");
+		
+		
 
 		$page->success = "You have deleted the user ".$options->html($u->username);
 

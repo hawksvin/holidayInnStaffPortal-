@@ -66,19 +66,19 @@ $privacy  = $db->getRow("SELECT * FROM `".MLS_PREFIX."privacy` WHERE `userid` = 
 $group  = $db->getRow("SELECT * FROM `".MLS_PREFIX."groups` WHERE `groupid` = ?i", $u->groupid);
 
 if($privacy->email == 1 || $user->isAdmin()){
-	$extra_details .= "<b>Email:</b> ". $options->html($u->email)."<br/><br/>";
+	$extra_details .= "<p><i class='icon-envelope'></i> Email: <a href='mailto:'>". $options->html($u->email)."</a></p>";
 }
 
 if($privacy->cell_Number == 1 || $user->isAdmin()){
-	$extra_details .= "<b>cell Number:</b> ". $options->html($u->cell_Number)."<br/><br/>";
+	$extra_details .= "<p><i class='icon-headphones'></i> cell Number: ". $options->html($u->cell_Number)."</p>";
 }
 
 if($privacy->office_Phone == 1 || $user->isAdmin()){
-	$extra_details .= "<b>office Phone:</b> ". $options->html($u->office_Phone)."<br/><br/>";
+	$extra_details .= "<p><i class='icon-home'></i> office Phone:". $options->html($u->office_Phone)."</p>";
 }
 
 if($privacy->nID == 1 || $user->isAdmin()){
-	$extra_details .= "<b>national ID:</b> ". $options->html($u->nID)."<br/><br/>";
+	$extra_details .= "<p><i class='icon-tag'></i> national ID: ". $options->html($u->nID)."<p/>";
 }
 
 
@@ -113,13 +113,18 @@ echo "
 			<div style='text-align:center;'><b>".$user->showName($u->userid)." (".$options->html($u->username).") </b></div>
 		</div>
 		<div class='span7 well' style='margin:10px;'> 
-			<b>Rank:</b> ".$options->html($group->name)."<br/>
-			<b>Last seen:</b> ".$options->tsince($u->lastactive)."<br/>
-			<b>Position:</b> ".$options->html($u->position)."<br/><br/>
+		
+		
+		
+			<p><i class = 'icon-user'></i> Rank: ".$options->html($group->name)."</p>
+			<p><i class = 'icon-time'></i> Last seen: ".$options->tsince($u->lastactive)."</p>
+			<p><i class='icon-tag'></i> Position:".$options->html($u->position)."</p>
+			
+
 			
 			$extra_details
 			
-
+			
 		</div>
 
 	</div>

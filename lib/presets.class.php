@@ -59,6 +59,14 @@ class presets {
                             "name" => "Leave Panel",
                             "class" => $this->isActive("leavepanel")),
 					  "id" => "leavepanel");
+					  
+					  
+		if(($user->group->type == 3) || ($user->group->type == 2))	// we make this visible for admins and moderaters
+			$var[] = array("item",
+							array("href" => $set->url."/leaveAdmin.php",
+							"name" => "Leave Admin Panel",
+							"class" => $this->isActive("leaveadminpanel")),
+							"id" => "leaveadminpanel");			  
 
 
       if($user->group->type == 3) // we make it visible for admins only
@@ -67,6 +75,9 @@ class presets {
                             "name" => "Admin Panel",
                             "class" => $this->isActive("adminpanel")),
                       "id" => "adminpanel");
+					  
+					  
+
 
 
 

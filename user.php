@@ -43,6 +43,8 @@ if($_POST) {
       	$email = $_POST['email'];
       	$display_name = $_POST['display_name'];
 		
+		//$groupid = $_POST['groupid'];
+		
 		$nID = $_POST['nID'];
 		$position = $_POST['position'];
 		$dept = $_POST['dept'];
@@ -90,7 +92,7 @@ if($_POST) {
 			$u = $db->getRow("SELECT * FROM `".MLS_PREFIX."users` WHERE `userid` = ?i", $u->userid);
 	  	}*/
 		
-		if(!isset($page->error) && $db->query("UPDATE `".MLS_PREFIX."users` SET email='$email', display_name='$display_name', nID='$nID', position='$position', dept='$dept', title='$title', marital_Status='$marital_Status', cell_Number='$cell_Number', office_Phone='$office_Phone' WHERE userid='$u->userid'")) {
+		if(!isset($page->error) && $db->query("UPDATE `".MLS_PREFIX."users` SET email='$email', display_name='$display_name', nID='$nID', position='$position', dept='$dept', title='$title', marital_Status='$marital_Status', cell_Number='$cell_Number', office_Phone='$office_Phone'  WHERE userid='$u->userid'"))  {
 	  		$page->success = "Info was saved !";
 	  		// we make sure we show updated data
 			$u = $db->getRow("SELECT * FROM `".MLS_PREFIX."users` WHERE `userid` = ?i", $u->userid);
@@ -99,7 +101,7 @@ if($_POST) {
 		
 		
 		
-		/*$result = mysqli_query($GLOBALS["___mysqli_ston"], "UPDATE  feedback.subject_master  SET sub_name='$sub_name', sem_id='$sem_name', f_id='$f_id', batch_id='$period', division_id='$division' WHERE sub_id='$sub_id'");*/
+		 
 		
 		
 		
@@ -223,7 +225,7 @@ echo "
             <label>Display name</label>
           </div>
           <div class='controls'>
-            <input type='text' name='display_name' class='input-large' value='".$options->html($u->display_name)."'>
+            <input type='text' name='display_name' class='input-large' value='".$options->html($u->display_name)."' required>
           </div>
         </div>
 
@@ -232,7 +234,7 @@ echo "
             <label>Email</label>
           </div>
           <div class='controls'>
-            <input type='text' name='email' class='input-large' value='".$options->html($u->email)."'>
+            <input type='text' name='email' class='input-large' value='".$options->html($u->email)."' required>
           </div>
         </div>
 		
@@ -242,7 +244,7 @@ echo "
             <label>National ID</label>
           </div>
           <div class='controls'>
-            <input type='text' name='nID' class='input-large' value='".$options->html($u->nID)."'>
+            <input type='text' name='nID' class='input-large' value='".$options->html($u->nID)."' required>
           </div>
         </div>
 		
@@ -252,7 +254,7 @@ echo "
             <label>Position</label>
           </div>
           <div class='controls'>
-            <input type='text' name='position' class='input-large' value='".$options->html($u->position)."'>
+            <input type='text' name='position' class='input-large' value='".$options->html($u->position)."' required>
           </div>
         </div>
 		
@@ -261,7 +263,7 @@ echo "
             <label>Department</label>
           </div>
           <div class='controls'>
-            <input type='text' name='dept' class='input-large' value='".$options->html($u->dept)."'>
+            <input type='text' name='dept' class='input-large' value='".$options->html($u->dept)."' required>
           </div>
         </div>
 		
@@ -270,7 +272,7 @@ echo "
             <label>Title</label>
           </div>
           <div class='controls'>
-            <input type='text' name='title' class='input-large' value='".$options->html($u->title)."'>
+            <input type='text' name='title' class='input-large' value='".$options->html($u->title)."' required>
           </div>
         </div>
 		
@@ -280,7 +282,7 @@ echo "
             <label>Marital Status</label>
           </div>
           <div class='controls'>
-            <input type='text' name='marital_Status' class='input-large' value='".$options->html($u->marital_Status)."'>
+            <input type='text' name='marital_Status' class='input-large' value='".$options->html($u->marital_Status)."' required>
           </div>
         </div>
 		
@@ -289,7 +291,7 @@ echo "
             <label>Cell</label>
           </div>
           <div class='controls'>
-            <input type='text' name='cell_Number' class='input-large' value='".$options->html($u->cell_Number)."'>
+            <input type='text' name='cell_Number' class='input-large' value='".$options->html($u->cell_Number)."' required>
           </div>
         </div>
 		
@@ -298,7 +300,7 @@ echo "
             <label>Office Phone</label>
           </div>
           <div class='controls'>
-            <input type='text' name='office_Phone' class='input-large' value='".$options->html($u->office_Phone)."'>
+            <input type='text' name='office_Phone' class='input-large' value='".$options->html($u->office_Phone)."' required>
           </div>
         </div>
 		

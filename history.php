@@ -36,8 +36,8 @@ include 'header.php';
     <ul class="nav nav-list">
       <li class="nav-header">LEAVE OPTIONS</li>
       <li ><a href='leave.php'> Leave Request</a></li>
-      <li class='active'><a href='LeaveApproved.php'> Approved Leaves</a></li>
-	  <li><a href='history.php'>Leave History</a></li>
+      <li ><a href='LeaveApproved.php'> Approved Leaves</a></li>
+	  <li class='active'><a href='history.php' >Leave History</a></li>
 	  <li><a href='balance.php'> Leave Balances </a></li>
     </ul>
    </div><!--/.well -->
@@ -47,7 +47,7 @@ include 'header.php';
 <?php
 
 // get all approved leaves
-$qdata = $db->getAll("SELECT * FROM `hi_leaves` WHERE `userid` = $uid and `IsApproved`= 1");
+$qdata = $db->getAll("SELECT * FROM `hi_leaves` WHERE `userid` = $uid ");
 
 $verified = "";
 $approved = '';
@@ -57,8 +57,8 @@ $approved = '';
 	 
 
       echo "<table class='table table-striped table-hover'>
-	   <legend>Approved Leaves</legend>
-        <tr><th>Applied On Date</th> <th>Leave From Date</th><th>Leave Till Date</th><th>Leave Days</th><th>Leave Type</th><th>Approved</th><th>Leave Reason</th></tr>";
+	   <legend>Leave History</legend>
+        <tr><th>Applied On Date</th> <th>Leave From Date</th><th>Leave Till Date</th><th>Leave Days</th><th>Leave Type</th><th>Verified</th><th>Approved</th><th>Leave Reason</th></tr>";
      
 	 foreach($qdata as $q){
 		 
@@ -89,13 +89,13 @@ $approved = '';
            
 	echo 
        "<tr> 
-           
+          
           <td>".$options->html($q->AppliedDate)."</td> 
           <td>".$options->html($q->LeaveFrom)."</td>
 		  <td>".$options->html($q->LeaveTill)."</td>
 		  <td>".$options->html($q->LeaveDays)."</td>
 		  <td>".$options->html($q->LeaveType)."</td>
-		  
+		  <td>".$verified."</td>
 		  <td><mark>".$approved."</mark></td>
 		  <td>".$options->html($q->Reason)."</td>
         </tr>";

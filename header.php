@@ -59,6 +59,18 @@ if(!$user->islg()) // if it's not logged in we hide the user menu
 				margin-top: 0;
 				padding-top: 1em;
 			}
+			
+			#script-warning {
+				display: none;
+				background: #eee;
+				border-bottom: 1px solid #ddd;
+				padding: 0 10px;
+				line-height: 40px;
+				text-align: center;
+				font-weight: bold;
+				font-size: 12px;
+				color: red;
+			}
 		
 			#external-events .fc-event {
 				margin: 10px 0;
@@ -82,7 +94,32 @@ if(!$user->islg()) // if it's not logged in we hide the user menu
 				width: 900px;
 				font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
 				font-size: 14px;
-			}				
+			}		
+			
+			
+		//Style sheet for D3 Graph plotting
+			
+			.axis path{
+				fill:none;
+				stroke: black;
+			}
+			
+			.axis {
+				font-size:8pt;
+				font-family:sans-serif;
+			}
+			
+			.tick {
+				fill:none;
+
+				stroke:black;
+			}
+		
+
+
+
+
+				
         </style>
 		
         <link rel="stylesheet" href="<?php echo $set->url; ?>/css/bootstrap-responsive.min.css">
@@ -97,83 +134,259 @@ if(!$user->islg()) // if it's not logged in we hide the user menu
 		<script src='js/jquery-ui.min.js'></script>
 		<script src='js/fullcalendar.min.js'></script>
 		<!-- /Full callender libraries import -->
+		
+		
+		<!--D3 Library For Plotting Graphs-->
+		<script src="js/d3.js"></script>	
 
         <script src="<?php echo $set->url; ?>/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		
+	
+
+	<!--Script for fullCalender.io -->
 	<script>
-
+	
+	
 	$(document).ready(function() {
-
-		$('#calendar').fullCalendar({
-			defaultDate: '2016-09-12',
-			editable: true,
-			eventLimit: true, // allow "more" link when too many events
-			
-			//Dummy Data should get this data from a database through json
-			events: [
-				{
-					title: 'Irvin EL',
-					start: '2016-09-07T10:30:00',
-					end: '2016-09-10T12:30:00'
-				},
-				{
-					title: 'Mr Tanaka RH',
-					start: '2016-09-07',
-					
-				},
-				{
-					id: 999,
-					title: 'Ms Chimedza ML',
-					start: '2016-09-09'
-				},
-				{
-					id: 999,
-					title: 'Tendai CL',
-					start: '2016-09-16T10:30:00',
-					end: '2016-09-17T12:30:00'
-				},
-				{
-					title: 'Vivian CL',
-					start: '2016-09-11',
-					
-				},
-				{
-					title: 'Munya EL',
-					start: '2016-09-12',
-					
-				},
-				{
-					title: 'Xavier ML',
-					start: '2016-09-12'
-				},
-				{
-					title: 'Jane ML',
-					start: '2016-09-12'
-				},
-				{
-					title: 'Ms T CL',
-					start: '2016-09-12'
-				},
-				{
-					title: 'HolidayInn Holiday EL',
-					start: '2016-09-12'
-				},
-				{
-					title: 'Birthday Party CL',
-					start: '2016-09-13'
-				},
-				{
-					title: 'Click for Google',
-					url: 'http://google.com/',
-					start: '2016-09-28'
-				}
-			]
-		});
 		
+		var moment = $('#calender').fullCalendar('getDate');
+
+		//var zone = "05:30";  //Change this to your timezone
+
+	$.ajax({
+		url: 'process.php',
+        type: 'POST', // Send post data
+        data: 'type=fetch',
+        async: false,
+        success: function(s){
+        	json_events = s;
+        }
 	});
 
+
+		/* initialize the calendar
+		-----------------------------------------------------------------*/
+
+		$('#calendar').fullCalendar({
+			
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,basicWeek,basicDay'
+			},
+			
+			defaultDate: moment,
+			navLinks: true, // can click day/week names to navigate views
+			
+			//weekNumbers: true,
+			//weekNumbersWithinDays: true,
+			//weekNumberCalculation: 'ISO',
+			
+			eventLimit: true,
+			events: JSON.parse(json_events),
+			//events: [{"id":"14","title":"New Event","start":"2015-01-24T16:00:00+04:00","allDay":false}],
+			//utc: true,
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			}
+		});
+
+
+	});
+	
+
 </script>	
-		
+
+
+<!--Script for the Sentiment Analysis Chart-->
+<script>
+
+		function draw(data) {
+
+			var margin = 50,
+			width = 700,
+			height = 50;
+
+			var posWidth = d3.mean(data, function(d) {return d.pos })*1000;
+
+			//Positive Chart
+			var posChartSvg = d3.select('#posChart').append('svg').attr('width', 1000).attr('height', 22);
+			var g = posChartSvg.append("posChartSvg:g");
+
+			g.append('rect')
+			.style('stroke', 'blue')
+			.style('fill', 'white');
+
+			g.select('rect')
+			.data(data)
+			.enter();
+
+			g.select('rect')
+			.attr('height', 20)
+			.attr('width', 0)
+			.attr("transform", "translate(50,0)");
+
+			//transition animation
+			g.select('rect')
+			.transition()
+			.delay(100)
+			.duration(3000)
+			.style('fill', 'blue')
+			.style("opacity",0.7)
+			.attr("width", posWidth);
+
+
+
+
+			//Negative Chart
+			var negChartSvg = d3.select('#negChart').append('svg').attr('width', 1000).attr('height', 22);
+
+			var negWidth = d3.mean(data, function(d) {return d.neg })*1000;
+
+			var negG = negChartSvg.append("negChartSvg:g");
+			negG.append('rect')
+			.style('stroke', 'red')
+			.style('fill', 'white');
+
+			negG.select('rect')
+			.data(data)
+			.enter();
+
+			negG.select('rect')
+			.attr('height', 20)
+			.attr('width', 0)
+			.attr("transform", "translate(50,0)");
+
+
+
+			//transition animation
+
+			negG.select('rect')
+			.transition()
+			.delay(100)
+			.duration(3000)
+			.style('fill','red')
+			.style("opacity",0.7)
+			.attr("width", negWidth); 
+
+
+
+			//Neutral Chart 
+			var neuChartSvg = d3.select('#neuChart').append('svg').attr('width', 1000).attr('height', 22);
+
+			var neuWidth = d3.mean(data, function(d) {return d.neu })*1000;
+
+			var neu = neuChartSvg.append("neuChartSvg:g");
+			neu.append('rect')
+			.style('stroke', 'red')
+			.style('fill', 'white');
+
+			neu.select('rect')
+			.data(data)
+			.enter();
+
+			neu.select('rect')
+			.attr('height', 20)
+			.attr('width', 0)
+			.attr("transform", "translate(50,0)");
+
+
+
+
+
+			//transition
+			neu.select('rect')
+			.transition()
+			.delay(100)
+			.duration(3000)
+			.style('fill','orange')
+			.style("opacity",0.7)
+			.attr("width", neuWidth); 
+
+
+
+
+			//drawing the x-axis
+			var x_extent = d3.extent(data, function(d){return d.pos});
+
+			var x_scale = d3.scale.linear()
+			//.range([margin,width-margin])
+			.range([margin,width-margin])
+			.domain(x_extent);
+
+			var x_axis = d3.svg.axis().scale(x_scale);
+
+			d3.select("#neuChart")
+			.append("svg")
+			.attr('width', 1000).attr('height', 50)
+			.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + (height-margin) + ")")
+			.call(x_axis);
+
+			d3.select(".x.axis")
+			.append("text")
+			.text("Sentiment Analysis Scores (Using Naive Bayes Algorithm)")
+			.attr("x", (width / 2) - margin)
+			.attr("y", margin / 1.5);
+
+
+			//legend
+
+			var legendMenu = d3.select("#neuChart").append("svg").attr('width', 1000).attr('height', 60);
+
+			var lgnd = legendMenu.append( "legendMenu:g")
+
+			// Nagative Menu Icon
+			lgnd.append('rect')
+			.style('stroke', 'red')
+			.style('fill', 'red')
+			.attr('height', 10)
+			.attr('width', 10)
+			.attr("transform", "translate(50,0)");
+
+			// Negative Menu Label
+			lgnd.append("text")
+			.text("Negative")
+			.attr("x", 65)
+			.attr("y", 10);
+
+
+			//Positive Menu Icon
+			lgnd.append('rect')
+			.style('stroke', 'blue')
+			.style('fill', 'blue')
+			.attr('height', 10)
+			.attr('width', 10)
+			.attr("transform", "translate(50,20)");
+
+			//Positive Menu Label
+			lgnd.append("text")
+			.text("Positive")
+			.attr("x", 65)
+			.attr("y", 30);
+
+
+			//Neutral Menu Icon
+			lgnd.append('rect')
+			.style('stroke', 'orange')
+			.style('fill', 'orange')
+			.attr('height', 10)
+			.attr('width', 10)
+			.attr("transform", "translate(50,40)");
+
+			//Neutral Menu Label
+			lgnd.append("text")
+			.text("Neutral")
+			.attr("x", 65)
+			.attr("y", 50);
+
+}
+
+</script>
+
+	
 
     </head>
     <body>

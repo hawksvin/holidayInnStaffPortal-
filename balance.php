@@ -37,6 +37,7 @@ include 'header.php';
       <li class="nav-header">LEAVE OPTIONS</li>
       <li ><a href='leave.php'> Leave Request</a></li>
       <li ><a href='LeaveApproved.php'> Approved Leaves</a></li>
+	  <li><a href='history.php'>Leave History</a></li>
 	  <li class='active'><a href='balance.php'> Leave Balances </a></li>
     </ul>
    </div><!--/.well -->
@@ -48,7 +49,7 @@ include 'header.php';
 // get all approved leaves
 $bdata = $db->getAll("SELECT * FROM `hi_balances` WHERE `userid`= $uid ");
 
-      echo "<table class='table table-striped'>
+      echo "<table class='table table-striped table-hover'>
 	   <legend>Leave Balances</legend>
         <tr> <th>Year</th><th>Balance CL</th> <th>Balance EL</th><th>Balance RH</th><th>Balance ML</th></tr>";
      

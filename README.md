@@ -1,4 +1,29 @@
-# holidayInnStaffPortal-
-StaffPortal for holidayInn Harare 
+Name: Tinaye Manjeese
+RegNum: 
+=====================================================================
 
-This is a simple StaffPortal for HolidayInn Harare where staff is able to post important announcements on a msg forum, be able to request for off days, see who's off on a daily calender e.t.c
+This is a staff portal for HolidayInn Harare.
+
+special thanks to
+
+ /**
+ * MASTER LOGIN SYSTEM
+ * @author Mihai Ionut Vilcu (ionutvmi@gmail.com)
+ * June 2013
+ *
+ */
+ 
+ /*
+ *D3 Library for plotting of Graphs
+ *
+ /
+ 
+ /*
+ *Twitter Bootstrap for the User Interface
+ *
+ */
+ 
+ /*
+ *hawksvin.github.io for front-end design
+ *
+ */

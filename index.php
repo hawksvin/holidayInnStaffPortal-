@@ -5,6 +5,8 @@
 
 include "inc/init.php";
 
+//include "get-events.php";
+
 // include db process file for full callender
 //include('process.php');
 
@@ -49,10 +51,12 @@ echo "
 			
 		
 		</div>
-
-		<div id='calendar'>
-
+		
+		<div id='script-warning'>
+			<code>get-events.php</code> must be running.
 		</div>
+
+		<div id='calendar'></div>
 
 		<div style='clear:both'></div>
 

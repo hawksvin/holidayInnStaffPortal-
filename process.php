@@ -2,65 +2,39 @@
 //include('config.php');
 //include "inc/init.php";
 
+include "inc/init.php";
+
 $type = $_POST['type'];
-
-if($type == 'new')
-{
-	$startdate = $_POST['startdate'].'+'.$_POST['zone'];
-	$title = $_POST['title'];
-	$insert = mysqli_query($con,"INSERT INTO calendar(`title`, `startdate`, `enddate`, `allDay`) VALUES('$title','$startdate','$startdate','false')");
-	$lastid = mysqli_insert_id($con);
-	echo json_encode(array('status'=>'success','eventid'=>$lastid));
-}
-
-if($type == 'changetitle')
-{
-	$eventid = $_POST['eventid'];
-	$title = $_POST['title'];
-	$update = mysqli_query($con,"UPDATE calendar SET title='$title' where id='$eventid'");
-	if($update)
-		echo json_encode(array('status'=>'success'));
-	else
-		echo json_encode(array('status'=>'failed'));
-}
-
-if($type == 'resetdate')
-{
-	$title = $_POST['title'];
-	$startdate = $_POST['start'];
-	$enddate = $_POST['end'];
-	$eventid = $_POST['eventid'];
-	$update = mysqli_query($con,"UPDATE calendar SET title='$title', startdate = '$startdate', enddate = '$enddate' where id='$eventid'");
-	if($update)
-		echo json_encode(array('status'=>'success'));
-	else
-		echo json_encode(array('status'=>'failed'));
-}
-
-if($type == 'remove')
-{
-	$eventid = $_POST['eventid'];
-	$delete = mysqli_query($con,"DELETE FROM calendar where id='$eventid'");
-	if($delete)
-		echo json_encode(array('status'=>'success'));
-	else
-		echo json_encode(array('status'=>'failed'));
-}
 
 if($type == 'fetch')
 {
 	$events = array();
-	$query = mysqli_query($con, "SELECT * FROM calendar");
-	while($fetch = mysqli_fetch_array($query,MYSQLI_ASSOC))
+	
+	$edata = $db->getAll("SELECT * FROM `hi_leaves` WHERE `IsApproved`= 1");
+	
+	
+	foreach($edata as $c)
 	{
 	$e = array();
-    $e['id'] = $fetch['id'];
-    $e['title'] = $fetch['title'];
-    $e['start'] = $fetch['startdate'];
-    $e['end'] = $fetch['enddate'];
+	//get user id from leave database
+	$uid = $options->html($c->userid);
+	
+	//use that id to get the users name from users table
+	$u = $db->getRow("SELECT * FROM `".MLS_PREFIX."users` WHERE `userid` = ?i", $uid);
+	
+	
 
-    $allday = ($fetch['allDay'] == "true") ? true : false;
-    $e['allDay'] = $allday;
+    $e['id'] = $options->html($c->LeaveID);
+	
+    $e['title'] = $options->html($u->username).' - '.$options->html($c->LeaveType).' : '.$options->html($c->Reason);
+	
+	$e['url'] = 'http://localhost/staffPortal/profile.php?u='.$uid;
+	
+    $e['start'] = $options->html($c->LeaveFrom);
+    $e['end'] = $options->html($c->LeaveTill);
+
+   // $allday = ($options->html($c->allDay) == "true") ? true : false;
+    $e['allDay'] = 'true';
 
     array_push($events, $e);
 	}
