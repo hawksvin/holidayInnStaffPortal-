@@ -1,5 +1,4 @@
-Name: Tinaye Manjeese
-RegNum: 
+A STAFF PORTAL TO HELP MANAGE WORKERS AT A LOCAL HOTEL
 =====================================================================
 
 This is a staff portal for HolidayInn Harare.
